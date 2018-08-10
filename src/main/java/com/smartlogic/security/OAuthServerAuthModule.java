@@ -125,7 +125,7 @@ public class OAuthServerAuthModule implements ServerAuthModule {
     this.loginReqeustParam =
         retrieveOptionalProperty(options, LOGIN_REQUEST_PARAM_PROPERTY_NAME, null);
     try {
-      this.endpoint = new URI(retrieveRequiredProperty(options, ENDPOINT_PROPERTY_NAME));
+      this.endpoint = new URI(retrieveOptionalProperty(options, ENDPOINT_PROPERTY_NAME, null));
       this.tokenApi = new URI(retrieveOptionalProperty(options, TOKEN_API, this.endpoint + "/" + DEFAULT_TOKEN_API));
       this.authApi = new URI(retrieveOptionalProperty(options, AUTHORIZE_API, this.endpoint + "/" + DEFAULT_AUTHORIZE_API));
       this.userInfoApi = new URI(retrieveOptionalProperty(options, USERINFO_API, this.endpoint + "/" + DEFAULT_USERINFO_API));
