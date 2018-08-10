@@ -28,10 +28,24 @@ The following attributes can be used to configure `com.smartlogic.security.googl
 #### `oauth.endpoint` (_REQUIRED_)
 `oauth.endpoint` is the URI that will be connect to for the OAuth authentication.
 
-Google Example: `https://accounts.google.com/o/oauth2/auth`
+Google Example: `https://accounts.google.com/o/oauth2`  This is actually ignored for Google, you need to set each end point separately.
 
 Okta Example: `https://dev-926840.oktapreview.com/oauth2/ausd9spsyoOsLKc2i0h7/v1`
 
+#### `oauth.auth_uri` (_optional_)
+`oauth.auth_uri` is the authorization uri.  This overrides the entire authorize uri.  By default, this evaluates to `oauth.endpoint` " /authorize ", which works for Okta.
+
+Google Example: `https://accounts.google.com/o/oauth2/v2/auth`
+
+#### `oauth.token_uri` (_optional_)
+`oauth.token_uri` is the token uri.  This overrides the entire authorize uri.  By default, this evaluates to `oauth.endpoint` " /token ", which works for Okta.
+
+Google Example: `https://www.googleapis.com/oauth2/v4/token`
+
+#### `oauth.userinfo_uri` (_optional_)
+`oauth.userinfo_uri` is the userinfo uri.  This overrides the entire userinfo uri.  By default, this evaluates to `oauth.endpoint` " /userinfo ", which works for Okta.
+
+Google Example: `https://www.googleapis.com/oauth2/v3/userinfo`
 
 #### `oauth.callback_uri` (_optional_) 
 default: `/j_oauth_callback`
