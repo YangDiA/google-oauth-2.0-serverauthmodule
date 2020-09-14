@@ -1,9 +1,9 @@
-package com.idmworks.security.google;
+package com.smartlogic.security;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -12,15 +12,17 @@ import javax.servlet.http.HttpSession;
  * Provides methods for saving and retrieving state.
  *
  * @author pdgreen
+ * @author rahlander
  */
 public class StateHelper {
 
-  private static Logger LOGGER = Logger.getLogger(GoogleOAuthServerAuthModule.class.getName());
+  private static Logger LOGGER = Logger.getLogger(OAuthServerAuthModule.class.getName());
   /*
    * Session Parameters
    */
   private static final String SESSION_PREFIX = StateHelper.class.getName() + ".";
   private static final String ORIGINAL_REQUEST_PATH = SESSION_PREFIX + "original_request_path";
+  private static final String ORIGINAL_REQUEST_QUERY = SESSION_PREFIX + "original_request_query";
   private static final String SAVED_SUBJECT = SESSION_PREFIX + "saved_subject";
   private final HttpServletRequest request;
 
@@ -47,25 +49,26 @@ public class StateHelper {
     }
   }
 
-  public void saveOriginalRequestPath() {
+  public void saveOriginalRequest(URI uri, String query) {
     final HttpSession session = request.getSession(true);
-    try {
-      final URI orignalRequestUri = new URI(request.getRequestURI());
-      session.setAttribute(ORIGINAL_REQUEST_PATH, orignalRequestUri);
-      LOGGER.log(Level.FINE, "Saved original request path {0}", orignalRequestUri);
-    } catch (URISyntaxException ex) {
-      LOGGER.log(Level.WARNING, "Unable to save original request path", ex);
+    session.setAttribute(ORIGINAL_REQUEST_PATH, uri);
+    if (query != null) {
+      session.setAttribute(ORIGINAL_REQUEST_QUERY, query);
     }
+    LOGGER.log(Level.FINE, "Saved original request {0}", Uris.buildUriWithQueryString(uri, query));
   }
 
-  public URI extractOriginalRequestPath() {
+  public URI extractOriginalRequest() {
     final HttpSession session = request.getSession(false);
     if (session != null) {
       final URI originalRequestPath = (URI) session.getAttribute(ORIGINAL_REQUEST_PATH);
+      final String originalRequestQuery = (String) session.getAttribute(ORIGINAL_REQUEST_QUERY);
       session.removeAttribute(ORIGINAL_REQUEST_PATH);
-      return originalRequestPath;
+      session.removeAttribute(ORIGINAL_REQUEST_QUERY);
+      return Uris.buildUriWithQueryString(originalRequestPath, originalRequestQuery);
     } else {
       return null;
     }
   }
+
 }
